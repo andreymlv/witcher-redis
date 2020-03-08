@@ -6,7 +6,7 @@ import requests
 # Create your views here.
 def home(request):
 
-    url = 'https://raw.githubusercontent.com/redisca/interns-2020-data/master/input.js'
+    url = 'https://raw.githubusercontent.com/poshekhon/witcher-redis/master/witcher/tree/data/input.js'
     data = requests.get(url).json()
 
     print(data)
