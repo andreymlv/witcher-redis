@@ -1,4 +1,4 @@
-module.exports = [
+var a = [
   {
     id: 1,
     name: "Nilfgaard",
@@ -239,3 +239,6 @@ module.exports = [
     parent: 3
   }
 ];
+
+var myJSON = JSON.stringify(a)
+document.getElementById("demo").innerHTML = myJSON
