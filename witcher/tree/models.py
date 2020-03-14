@@ -6,19 +6,15 @@ from django.db import models
 class Person(models.Model):
     """Модель персонажа"""
 
-    """
-        Может быть добавлю...
-        # Поле начальства
-        chief = models.ForeignKey(
-            'tree.Person', 
-            related_name='person', 
-            on_delete=models.CASCADE, 
-            verbose_name="Начальник", 
-            blank=True, 
-            null=True
-        )
-    """
-
+    # Поле начальства
+    chief = models.ForeignKey(
+        'tree.Person',
+        related_name='person',
+        on_delete=models.CASCADE,
+        verbose_name="Начальник",
+        blank=True,
+        null=True
+    )
     # Идентификатор (число, не может повторятся)
     identifier = models.IntegerField(verbose_name="Идентификатор")
     # Имя (текст)
@@ -52,4 +48,4 @@ class Person(models.Model):
         Если к объекту обращаются в виде строки, то возвращается id-начальства.
         Если возвращается Null - значит это самый верхний уровень
         """
-        return self.parent_id
+        return self.name
