@@ -3,58 +3,69 @@
 from django.shortcuts import render
 from .models import Person
 import json
-
-# Create your views here.
+from django.db.models import Count
 
 
 def home(request):
 
+    # Открываю файл data.json, форматирую его в простой массив Python
     with open('tree/templates/tree/data.json') as file:
         data = json.load(file)
 
-    for states_data in data:
-        if (states_data['id'] < 4):
+    # Обновляю или создаю в базе данных нужных мне персонажей
+    for state_data in data:
+        # Количество подчиненных
+        count_of_subordinates_inside = 0
+        if not ('parent' in state_data.keys()):
             state, created = Person.objects.update_or_create(
-                identifier=states_data['id'], 
-                name=states_data['name'], 
-                image=states_data['image']
+                **state_data
             )
-    
-    for rulers_data in data:
-        if (rulers_data.get('parent') == 1):
-            ruler, created = Person.objects.update_or_create(
-                identifier=rulers_data['id'], 
-                name=rulers_data['name'],
-                post= rulers_data['post'],
-                image=rulers_data['image'],
-                parent_id=rulers_data['parent'],
-                chief=Person.objects.get(identifier=1)
-            )
- 
-    states = Person.objects.filter(parent_id=None).order_by('identifier')
-    rulers = Person.objects.filter(parent_id=1).order_by('identifier')
+        for person_data in data:
+            if (person_data.get('parent') == state_data.get('id')):
+                count_of_subordinates_inside += 1
+                person, created = Person.objects.update_or_create(
+                    **person_data,
+                    chief=Person.objects.get(id__exact=state_data.get('id'))
+                )
 
+        Person.objects.filter(id__exact=state_data.get('id')).update(number_subordinates_hr=count_of_subordinates_inside)
+
+
+
+    # Сортирую по ID
+    states = Person.objects.filter(parent=None).order_by('id')
+
+    # Списки будут хранить в себе информацию объектов, которые потом будут передоваться в контекст
     states_list = list()
-    rulers_list = list()
 
     for state in states:
         person_info = {
-            "id": state.identifier,
+            "id": state.id,
             "name": state.name,
             "image": state.image
         }
         states_list.append(person_info)
-    
-    for ruler in rulers:
-        person_info = {
-            "name": ruler.name,
-            "image": ruler.image
-        }
-        rulers_list.append(person_info)
 
     context = {
-        'states_info': states_list,
-        'rulers_info': rulers_list
+        'states_info': states_list
     }
 
-    return render(request, 'tree/index.html', context)
+    return render(request, 'tree/states.html', context)
+
+
+def persons_page(request):
+
+    persons = Person.objects.order_by('id').values()
+    persons_list = list()
+
+    for person in persons:
+        person_info = dict(person)
+        print(person_info)
+        persons_list.append(person_info)
+
+
+    context = {
+        'person_info': persons_list
+    }
+
+    return render(request, 'tree/persons.html', context)

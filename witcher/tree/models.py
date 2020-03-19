@@ -16,7 +16,10 @@ class Person(models.Model):
         null=True
     )
     # Идентификатор (число, не может повторятся)
-    identifier = models.IntegerField(verbose_name="Идентификатор")
+    id = models.IntegerField(
+        verbose_name="Идентификатор",
+        primary_key=True
+    )
     # Имя (текст)
     name = models.CharField(
         verbose_name="Имя",
@@ -37,10 +40,15 @@ class Person(models.Model):
     )
     # Идентификатор начальника, кому подчиняется
     # (число, если отсутствует — это самый верхний уровень)
-    parent_id = models.IntegerField(
+    parent = models.IntegerField(
         verbose_name="Идентификатор начальника",
         blank=True,
         null=True
+    )
+    # Количество подчиненных высшего ранга
+    number_subordinates_hr = models.IntegerField(
+        verbose_name="Количество подчиненных высшего ранга",
+        default=0
     )
 
     def __str__(self):

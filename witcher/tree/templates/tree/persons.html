@@ -1,0 +1,13 @@
+{% extends 'tree/base.html' %} {% block content %} {% load static %} 
+{% for person in person_info %}
+
+<div class="col-sm">
+  <div class="text-center">
+    <img
+      src="{% static 'tree/' %}{{ person.image }}"
+      class="rounded"
+      alt="{{ person.name }}"
+    />
+  </div>
+</div>
+{% endfor %} {% endblock %}
