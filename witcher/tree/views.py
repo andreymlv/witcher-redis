@@ -8,7 +8,7 @@ from django.db.models import Count
 
 def start(request):
     """
-    Render States
+    Рендерит начальную страницу, где находятся штаты (государства)
     """
 
     states = Person.objects.order_by('id').filter(parent=None).values()
@@ -31,15 +31,10 @@ def start(request):
 
     return render(request, 'tree/home.html', context)
 
-def main(request):
-    """
-    Render WITCHER
-    And Start button
-    """
-    return render(request, 'tree/main.html')
-
-
 def persons_page(request):
+    """
+    Рендерит страницу со всеми персонажами, для удобного отслеживания, кто есть в базе данных.
+    """
 
     persons = Person.objects.order_by('id').values()
     persons_list = list()
@@ -56,6 +51,9 @@ def persons_page(request):
 
 
 def person_detail(request, pk):
+    """
+    Берёт из базы данных персонажа, и возвращает информацию о нём.
+    """
 
     person = get_object_or_404(Person, id=pk)
 
@@ -75,6 +73,9 @@ def person_detail(request, pk):
 
 
 def delete_and_update_persons(request):
+    """
+    Удаляет все данные о персонажах, и загружает (обновляет) новые данные из файла tree/data.json
+    """
     Person.objects.all().delete()
 
     # Открываю файл data.json, форматирую его в простой массив Python
