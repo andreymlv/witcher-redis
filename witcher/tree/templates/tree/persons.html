@@ -1,13 +1,18 @@
 {% extends 'tree/base.html' %} {% block content %} {% load static %} 
 {% for person in person_info %}
 
-<div class="col-sm">
-  <div class="text-center">
-    <img
-      src="{% static 'tree/' %}{{ person.image }}"
-      class="rounded"
-      alt="{{ person.name }}"
-    />
+  <div class="col-sm">
+    <div class="text-center">
+      <img
+        src="{% static 'tree/' %}{{ person.image }}"
+        class="img-fluid rounded w-20"
+        alt="{{ person.name }}"
+      />
+    </div>
   </div>
-</div>
+  
+  {% if person.id|divisibleby:"3" %}
+  <div class="w-100"></div>
+  {% endif %}
+
 {% endfor %} {% endblock %}

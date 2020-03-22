@@ -1,12 +1,81 @@
 # views.py: это файл, в котором мы обрабатываем цикл запроса / ответа нашего веб-приложения.
 
-from django.shortcuts import render
+from django.shortcuts import get_list_or_404, get_object_or_404, redirect, render
 from .models import Person
 import json
 from django.db.models import Count
 
 
-def home(request):
+def start(request):
+    """
+    Render States
+    """
+
+    states = Person.objects.order_by('id').filter(parent=None).values()
+    states_list = list()
+    subordinates = Person.objects.order_by('id').filter(parent__lte=len(states)).values()
+    subordinates_list = list()
+
+    for state in states:
+        state_info = dict(state)
+
+        for subordinate in subordinates:
+            subordinates_list.append(dict(subordinate))
+        
+        states_list.append(state_info)
+
+    context = {
+        'state_info' : states_list,
+        'subordinate_info': subordinates_list
+    }
+
+    return render(request, 'tree/home.html', context)
+
+def main(request):
+    """
+    Render WITCHER
+    And Start button
+    """
+    return render(request, 'tree/main.html')
+
+
+def persons_page(request):
+
+    persons = Person.objects.order_by('id').values()
+    persons_list = list()
+
+    for person in persons:
+        persons_list.append(dict(person))
+
+
+    context = {
+        'person_info': persons_list
+    }
+
+    return render(request, 'tree/persons.html', context)
+
+
+def person_detail(request, pk):
+
+    person = get_object_or_404(Person, id=pk)
+
+    if (person.number_subordinates_hr != 0):
+        subordinates = list(Person.objects.order_by('id').filter(parent=person.id).values())
+
+        context = {
+            'person': person,
+            'subordinates': subordinates
+        }
+    else:
+        context = {
+            'person': person
+        }
+
+    return render(request, 'tree/person_detail.html', context)
+
+
+def delete_and_update_persons(request):
+    Person.objects.all().delete()
 
     # Открываю файл data.json, форматирую его в простой массив Python
     with open('tree/templates/tree/data.json') as file:
@@ -31,41 +100,4 @@ def home(request):
         Person.objects.filter(id__exact=state_data.get('id')).update(number_subordinates_hr=count_of_subordinates_inside)
 
 
-
-    # Сортирую по ID
-    states = Person.objects.filter(parent=None).order_by('id')
-
-    # Списки будут хранить в себе информацию объектов, которые потом будут передоваться в контекст
-    states_list = list()
-
-    for state in states:
-        person_info = {
-            "id": state.id,
-            "name": state.name,
-            "image": state.image
-        }
-        states_list.append(person_info)
-
-    context = {
-        'states_info': states_list
-    }
-
-    return render(request, 'tree/states.html', context)
-
-
-def persons_page(request):
-
-    persons = Person.objects.order_by('id').values()
-    persons_list = list()
-
-    for person in persons:
-        person_info = dict(person)
-        print(person_info)
-        persons_list.append(person_info)
-
-
-    context = {
-        'person_info': persons_list
-    }
-
-    return render(request, 'tree/persons.html', context)
+    return redirect('/')

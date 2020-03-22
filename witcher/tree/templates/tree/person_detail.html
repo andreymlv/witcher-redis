@@ -1,0 +1,38 @@
+{% extends 'tree/base.html' %} 
+{% block content %} 
+    {% load static %}
+    <div class="row justify-content-md-center">
+        <div class="col-sm">
+            <div class="text-center">
+                <a href="/persons/{{ person.id }}">
+                    <img
+                        src="{% static 'tree/' %}{{ person.image }}"
+                        class="img-fluid rounded w-20"
+                        alt="{{ person.name }}"
+                    />
+                </a>
+            </div>
+        </div>
+    </div>
+    <br>
+    {% if person.number_subordinates_hr != 0 %}
+        <div class="row justify-content-sm-center">
+            {% for subordinate in subordinates %}
+                
+                    <div class="col-md">
+                        <div class="text-center">
+                            <!-- попробовать потом избегать таких url, и применять get_absolute_url -->
+                            <a href="/persons/{{ subordinate.id }}">
+                                <img
+                                    src="{% static 'tree/' %}{{ subordinate.image }}"
+                                    class="img-fluid rounded w-20"
+                                    alt="{{ subordinate.name }}"
+                                />
+                            </a>
+                        </div>
+                    </div>
+                
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}

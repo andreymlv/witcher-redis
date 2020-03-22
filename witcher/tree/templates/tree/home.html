@@ -1,0 +1,19 @@
+{% extends 'tree/base.html' %} 
+{% block content %} 
+    {% load static %}
+    <div class="row justify-content-md-center">
+    {% for state in state_info %}
+        <div class="col-sm">
+            <div class="text-center">
+                <a href="/persons/{{ state.id }}">
+                <img
+                    src="{% static 'tree/' %}{{ state.image }}"
+                    class="img-fluid rounded w-100"
+                    alt="{{ state.name }}"
+                />
+                </a>
+            </div>
+        </div>
+    {% endfor %} 
+</div>
+{% endblock %}
