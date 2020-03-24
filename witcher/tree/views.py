@@ -100,5 +100,4 @@ def delete_and_update_persons(request):
 
         Person.objects.filter(id__exact=state_data.get('id')).update(number_subordinates_hr=count_of_subordinates_inside)
 
-
     return redirect('/')

@@ -1,4 +1,13 @@
 {% extends 'tree/base.html' %} 
+{% block back %}
+<li class="nav-item">
+    {% if person.parent == None %}
+        <a class="nav-link" href="/">Back</a>
+    {% else %}
+        <a class="nav-link" href="../../persons/{{ person.parent }}">Back</a>
+    {% endif %}
+</li>
+{% endblock %}
 {% block content %} 
     {% load static %}
     <div class="row justify-content-md-center">
