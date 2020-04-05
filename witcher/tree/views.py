@@ -1,9 +1,11 @@
 # views.py: это файл, в котором мы обрабатываем цикл запроса / ответа нашего веб-приложения.
 
-from django.shortcuts import get_list_or_404, get_object_or_404, redirect, render
-from .models import Person
 import json
+
 from django.db.models import Count
+from django.shortcuts import get_object_or_404, redirect, render
+
+from .models import Person
 
 
 def start(request):
