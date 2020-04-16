@@ -18,8 +18,7 @@ var a = [
     id: 4,
     name: "Emhyr var Emreis",
     post: "Urcheon of Erlenwald",
-    image: "emhyr.jpg",
-    parent: 1
+    image: "emhyr.jpg",parent: 1
   },
   {
     id: 5,

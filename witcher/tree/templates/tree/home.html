@@ -1,19 +1,27 @@
-{% extends 'tree/base.html' %} 
-{% block content %} 
-    {% load static %}
-    <div class="row justify-content-md-center">
-    {% for state in state_info %}
-        <div class="col-sm">
-            <div class="text-center">
+{% extends 'tree/base.html' %}
+{% block content %}
+{% load static %}
+<div class="container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col"></div>
+            <div class="col align-self-center">
+                <a href="/"><img src="{% static 'tree' %}/logo.png" alt="Home" class="img-fluid"></a>
+            </div>
+            <div class="col"></div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            {% for state in state_info %}
+            <div class="col">
                 <a href="/persons/{{ state.id }}">
-                <img
-                    src="{% static 'tree/' %}{{ state.image }}"
-                    class="img-fluid rounded w-100"
-                    alt="{{ state.name }}"
-                />
+                    <img src="{% static 'tree/' %}{{ state.image }}" class="rounded-circle img-fluid" alt="{{ state.name }}" />
+                    <p class="text-center">{{ state.name }}</p>
                 </a>
             </div>
+            {% endfor %}
         </div>
-    {% endfor %} 
+    </div>
 </div>
 {% endblock %}
