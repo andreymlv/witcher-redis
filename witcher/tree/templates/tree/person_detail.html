@@ -1,39 +1,51 @@
 {% extends 'tree/base.html' %}
-{% block back %}
-<li class="nav-item">
-    {% if person.parent == None %}
-    <a class="nav-link" href="/">Back</a>
-    {% else %}
-    <a class="nav-link" href="../../persons/{{ person.parent }}">Back</a>
-    {% endif %}
-</li>
-{% endblock %}
 {% block content %}
 {% load static %}
-<div class="row justify-content-md-center">
-    <div class="col-sm-3">
-        <div class="text-center">
-            <a href="/persons/{{ person.id }}">
-                <img src="{% static 'tree/' %}{{ person.image }}" class="rounded-circle img-thumbnail p-2" alt="{{ person.name }}" />
-            </a>
-            <h3>{{ person.name }}</h3>
+<div class="container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col">
+                {% if person.parent == None %}
+                <a href="/" class="btn btn-lg active" role="button" aria-pressed="true">Back</a>
+                {% else %}
+                <a href="../../persons/{{ person.parent }}" class="btn btn-lg active" role="button" aria-pressed="true">Back</a>
+                {% endif %}
+            </div>
+            <div class="col align-self-center">
+                <img src="{% static 'tree/' %}{{ person.image }}" class="rounded-circle img-fluid" alt="{{ person.name }}" />
+                <p class="text-center">{{ person.name }}</p>
+            </div>
+            <div class="col">
+                <a href="/"><img src="{% static 'tree' %}/logo.png" alt="Home" class="img-fluid w-25"></a>
+            </div>
         </div>
     </div>
-</div>
-<br>
-{% if person.number_subordinates_hr != 0 %}
-<div class="row justify-content-md-center">
-    {% for subordinate in subordinates %}
-    <div class="col-sm">
-        <div class="text-center">
-            <!-- попробовать потом избегать таких url, и применять get_absolute_url -->
-            <a href="/persons/{{ subordinate.id }}">
-                <img src="{% static 'tree/' %}{{ subordinate.image }}" class="rounded-circle img-fluid w-20" alt="{{ subordinate.name }}" />
-            </a>
-            <h4>{{ subordinate.name }}</h4>
+    {% if person.number_subordinates_hr != 0 %}
+    <div class="container-fluid">
+        <div class="row">
+            {% if person.number_subordinates_hr > 1 %}
+            {% for subordinate in subordinates %}
+            <div class="col">
+                <a href="/persons/{{ subordinate.id }}">
+                    <img src="{% static 'tree/' %}{{ subordinate.image }}" class="rounded-circle img-fluid" alt="{{ subordinate.name }}" />
+                    <p class="text-center">{{ subordinate.name }}</p>
+                </a>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="col"></div>
+            {% for subordinate in subordinates %}
+            <div class="col">
+                <a href="/persons/{{ subordinate.id }}">
+                    <img src="{% static 'tree/' %}{{ subordinate.image }}" class="rounded-circle img-fluid" alt="{{ subordinate.name }}" />
+                    <p class="text-center">{{ subordinate.name }}</p>
+                </a>
+            </div>
+            {% endfor %}
+            <div class="col"></div>
+            {% endif %}
         </div>
     </div>
-    {% endfor %}
+    {% endif %}
 </div>
-{% endif %}
 {% endblock %}
